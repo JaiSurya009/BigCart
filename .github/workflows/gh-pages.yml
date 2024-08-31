@@ -11,14 +11,14 @@ jobs:
 
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v3  # Uses the latest version available
+        uses: actions/checkout@v3
         with:
-          clean: true  # Forces a clean checkout to avoid using cache
+          clean: true
 
       - name: Setup Node.js environment
-        uses: actions/setup-node@v3  # Uses the latest version available
+        uses: actions/setup-node@v3
         with:
-          node-version: '20'  # Explicitly set to Node.js 20
+          node-version: '20'
 
       - name: Install dependencies
         run: npm install  # Adjust if you have specific dependencies, or skip if not needed
@@ -26,14 +26,19 @@ jobs:
       - name: Prepare files for deployment
         run: |
           mkdir -p public
-          cp Customer/HTML/index.html public/
+          cp -r Customer/HTML/* public/
           cp -r Customer/CSS public/CSS
           cp -r Customer/JS public/JS
           cp -r Customer/images public/images
+          ls -la public  # List files in public directory for debugging
 
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./public
-          keep_files: true  # Optional: Set to true if you want to keep existing files in gh-pages branch
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git clone --branch gh-pages https://github.com/${{ github.repository }} public || echo "gh-pages branch does not exist, creating a new one"
+          cp -r Customer/HTML/* public/
+          cd public
+          git add .
+          git commit -m "Deploy to GitHub Pages" || echo "No changes to commit"
+          git push
