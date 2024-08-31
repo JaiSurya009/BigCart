@@ -3,31 +3,35 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - main  # Adjust if your main branch has a different name
+      - main  # Change this if your default branch has a different name
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v3  # Updated to the latest version
+      - name: Checkout the repository
+        uses: actions/checkout@v3  # Uses the latest version available
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v3  # Updated to the latest version
-      with:
-        node-version: '20'  # Explicitly set to the latest stable Node.js version
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v3  # Uses the latest version available
+        with:
+          node-version: '20'  # Explicitly set to Node.js 20
 
-    - name: Copy index.html to root
-      run: |
-        mkdir public
-        cp Customer/HTML/index.html public/
-        cp -r Customer/CSS public/CSS
-        cp -r Customer/JS public/JS
-        cp -r Customer/images public/images
+      - name: Install dependencies
+        run: npm install  # Adjust if you have specific dependencies, or skip if not needed
 
-    - name: Deploy to GitHub Pages
-      uses: peaceiris/actions-gh-pages@v3
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./public
+      - name: Prepare files for deployment
+        run: |
+          mkdir -p public
+          cp Customer/HTML/index.html public/
+          cp -r Customer/CSS public/CSS
+          cp -r Customer/JS public/JS
+          cp -r Customer/images public/images
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
+          keep_files: true  # Optional: Set to true if you want to keep existing files in gh-pages branch
