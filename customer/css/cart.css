@@ -54,10 +54,15 @@ header {
     text-align: right;
 }
 
+
 footer {
     background-color: #576444;
     color: white;
     text-align: center;
     padding: 1rem;
     margin-top: 2rem;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
 }
