@@ -279,7 +279,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 document.getElementById('createProductBtn').addEventListener('click', function () {
-    window.location.href = '/html/add-product.html';
+    window.location.href = './html/add-product.html';
 });
 
 function deleteSubscription(button) {
